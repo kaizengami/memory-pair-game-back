@@ -1,0 +1,9 @@
+postgres96:
+  image: postgres:9.6
+  ports:
+    - '8080:8080'
+  volumes:
+    - data:/var/lib/postgresql/data
+  environment:
+    POSTGRES_PASSWORD: 1234
+    POSTGRES_USER: postgres
