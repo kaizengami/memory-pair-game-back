@@ -1,55 +1,58 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { CreateTaskDto } from './dto/create-score.dto';
-import { GetTasksFilterDto } from './dto/get-scores-filter.dto';
-import { TaskRepository } from './score.repository';
+import { CreateScoreDto } from './dto/create-score.dto';
+import { GetScoresFilterDto } from './dto/get-scores-filter.dto';
+import { ScoreRepository } from './score.repository';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Task } from './score.entity';
-import { TaskStatus } from './score-status.enum';
+import { Score } from './score.entity';
+import { ScoreStatus } from './score-status.enum';
 import { User } from '../auth/user.entity';
 
 @Injectable()
-export class TasksService {
+export class ScoresService {
   constructor(
-    @InjectRepository(TaskRepository)
-    private taskRepository: TaskRepository,
+    @InjectRepository(ScoreRepository)
+    private scoreRepository: ScoreRepository,
   ) {}
 
-  async getTasks(filterDto: GetTasksFilterDto, user: User): Promise<Task[]> {
-    return this.taskRepository.getTasks(filterDto, user);
+  async getScores(filterDto: GetScoresFilterDto, user: User): Promise<Score[]> {
+    return this.scoreRepository.getScores(filterDto, user);
   }
 
-  async getTaskById(id: number, user: User): Promise<Task> {
-    const found = await this.taskRepository.findOne({
+  async getScoreById(id: number, user: User): Promise<Score> {
+    const found = await this.scoreRepository.findOne({
       where: { id, userId: user.id },
     });
 
     if (!found) {
-      throw new NotFoundException(`Task with ID "${id}" not found`);
+      throw new NotFoundException(`Score with ID "${id}" not found`);
     }
 
     return found;
   }
 
-  async createTask(createTaskDto: CreateTaskDto, user: User): Promise<Task> {
-    return this.taskRepository.createTask(createTaskDto, user);
+  async createScore(
+    createScoreDto: CreateScoreDto,
+    user: User,
+  ): Promise<Score> {
+    return this.scoreRepository.createScore(createScoreDto, user);
   }
 
-  async deleteTask(id: number, user: User): Promise<void> {
-    const result = await this.taskRepository.delete({ id, userId: user.id });
+  async deleteScore(id: number, user: User): Promise<void> {
+    const result = await this.scoreRepository.delete({ id, userId: user.id });
 
     if (result.affected === 0) {
-      throw new NotFoundException(`Task with ID "${id}" not found`);
+      throw new NotFoundException(`Score with ID "${id}" not found`);
     }
   }
 
-  async updateTaskStatus(
+  async updateScoreStatus(
     id: number,
-    status: TaskStatus,
+    status: ScoreStatus,
     user: User,
-  ): Promise<Task> {
-    const task = await this.getTaskById(id, user);
-    task.status = status;
-    await task.save();
-    return task;
+  ): Promise<Score> {
+    const score = await this.getScoreById(id, user);
+    score.status = status;
+    await score.save();
+    return score;
   }
 }

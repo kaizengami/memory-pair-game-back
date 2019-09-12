@@ -5,22 +5,25 @@ import {
   Column,
   ManyToOne,
 } from 'typeorm';
-import { TaskStatus } from './score-status.enum';
+import { ScoreStatus } from './score-status.enum';
 import { User } from '../auth/user.entity';
 
 @Entity()
-export class Task extends BaseEntity {
+export class Score extends BaseEntity {
   @PrimaryGeneratedColumn()
   id: number;
 
   @Column()
-  title: string;
+  name: string;
 
   @Column()
-  description: string;
+  time: string;
 
   @Column()
-  status: TaskStatus;
+  points: number;
+
+  @Column()
+  status: ScoreStatus;
 
   @ManyToOne(type => User, user => user.tasks, { eager: false })
   user: User;

@@ -1,10 +1,10 @@
-import { TaskStatus } from '../score-status.enum';
+import { ScoreStatus } from '../score-status.enum';
 import { IsOptional, IsIn, IsNotEmpty } from 'class-validator';
 
-export class GetTasksFilterDto {
+export class GetScoresFilterDto {
   @IsOptional()
-  @IsIn([TaskStatus.OPEN, TaskStatus.IN_PROGRESS, TaskStatus.DONE])
-  status: TaskStatus;
+  @IsIn([ScoreStatus.OPEN, ScoreStatus.IN_PROGRESS, ScoreStatus.DONE])
+  status: ScoreStatus;
 
   @IsOptional()
   @IsNotEmpty()

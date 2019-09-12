@@ -1,38 +1,38 @@
-import { Task } from './score.entity';
+import { Score } from './score.entity';
 import { EntityRepository, Repository } from 'typeorm';
-import { CreateTaskDto } from './dto/create-score.dto';
-import { TaskStatus } from './score-status.enum';
-import { GetTasksFilterDto } from './dto/get-scores-filter.dto';
+import { CreateScoreDto } from './dto/create-score.dto';
+import { ScoreStatus } from './score-status.enum';
+import { GetScoresFilterDto } from './dto/get-scores-filter.dto';
 import { User } from '../auth/user.entity';
 import { Logger, InternalServerErrorException } from '@nestjs/common';
 
-@EntityRepository(Task)
-export class TaskRepository extends Repository<Task> {
-  private logger = new Logger('TaskRepository');
+@EntityRepository(Score)
+export class ScoreRepository extends Repository<Score> {
+  private logger = new Logger('ScoreRepository');
 
-  async getTasks(filterDto: GetTasksFilterDto, user: User): Promise<Task[]> {
+  async getScores(filterDto: GetScoresFilterDto, user: User): Promise<Score[]> {
     const { status, search } = filterDto;
-    const query = this.createQueryBuilder('task');
+    const query = this.createQueryBuilder('score');
 
-    query.where('task.userId = :userId', { userId: user.id });
+    query.where('score.userId = :userId', { userId: user.id });
 
     if (status) {
-      query.andWhere('task.status = :status', { status });
+      query.andWhere('score.status = :status', { status });
     }
 
     if (search) {
       query.andWhere(
-        '(task.title LIKE :search OR task.description LIKE :search)',
+        '(score.title LIKE :search OR score.description LIKE :search)',
         { search: `%${search}%` },
       );
     }
 
     try {
-      const tasks = await query.getMany();
-      return tasks;
+      const scores = await query.getMany();
+      return scores;
     } catch (error) {
       this.logger.error(
-        `Failed to get tasks for user "${
+        `Failed to get scores for user "${
           user.username
         }". Filters: ${JSON.stringify(filterDto)}`,
         error.stack,
@@ -41,26 +41,30 @@ export class TaskRepository extends Repository<Task> {
     }
   }
 
-  async createTask(createTaskDto: CreateTaskDto, user: User): Promise<Task> {
-    const { title, description } = createTaskDto;
+  async createScore(
+    createScoreDto: CreateScoreDto,
+    user: User,
+  ): Promise<Score> {
+    const { name, time, points } = createScoreDto;
 
-    const task = new Task();
-    task.title = title;
-    task.description = description;
-    task.status = TaskStatus.OPEN;
-    task.user = user;
+    const score = new Score();
+    score.name = name;
+    score.time = time;
+    score.points = points;
+    score.status = ScoreStatus.OPEN;
+    score.user = user;
 
     try {
-      await task.save();
+      await score.save();
     } catch (error) {
       this.logger.error(
-        `Failed to create a task for user "${user.username}". Data: ${createTaskDto}`,
+        `Failed to create a score for user "${user.username}". Data: ${createScoreDto}`,
         error.stack,
       );
       throw new InternalServerErrorException();
     }
 
-    delete task.user;
-    return task;
+    delete score.user;
+    return score;
   }
 }

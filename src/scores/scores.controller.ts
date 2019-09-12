@@ -14,71 +14,71 @@ import {
   Logger,
 } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
-import { TasksService } from './scores.service';
-import { CreateTaskDto } from './dto/create-score.dto';
-import { TaskStatusValidationPipe } from './pipes/score-status-validation.pipe';
-import { GetTasksFilterDto } from './dto/get-scores-filter.dto';
-import { Task } from './score.entity';
-import { TaskStatus } from './score-status.enum';
+import { ScoresService } from './scores.service';
+import { CreateScoreDto } from './dto/create-score.dto';
+import { ScoreStatusValidationPipe } from './pipes/score-status-validation.pipe';
+import { GetScoresFilterDto } from './dto/get-scores-filter.dto';
+import { Score } from './score.entity';
+import { ScoreStatus } from './score-status.enum';
 import { User } from '../auth/user.entity';
 import { GetUser } from '../auth/get-user.decorator';
 
 @Controller('tasks')
 @UseGuards(AuthGuard())
-export class TasksController {
-  private logger = new Logger('TasksController');
+export class ScoresController {
+  private logger = new Logger('ScoresController');
 
-  constructor(private tasksService: TasksService) {}
+  constructor(private scoresService: ScoresService) {}
 
   @Get()
-  getTasks(
-    @Query(ValidationPipe) filterDto: GetTasksFilterDto,
+  getScores(
+    @Query(ValidationPipe) filterDto: GetScoresFilterDto,
     @GetUser() user: User,
-  ): Promise<Task[]> {
+  ): Promise<Score[]> {
     this.logger.verbose(
-      `User "${user.username}" retrieving all tasks. Filters: ${JSON.stringify(
+      `User "${user.username}" retrieving all scores. Filters: ${JSON.stringify(
         filterDto,
       )}`,
     );
-    return this.tasksService.getTasks(filterDto, user);
+    return this.scoresService.getScores(filterDto, user);
   }
 
   @Get('/:id')
-  getTaskById(
+  getScoreById(
     @Param('id', ParseIntPipe) id: number,
     @GetUser() user: User,
-  ): Promise<Task> {
-    return this.tasksService.getTaskById(id, user);
+  ): Promise<Score> {
+    return this.scoresService.getScoreById(id, user);
   }
 
   @Post()
   @UsePipes(ValidationPipe)
-  createTask(
-    @Body() createTaskDto: CreateTaskDto,
+  createScore(
+    @Body() createScoreDto: CreateScoreDto,
     @GetUser() user: User,
-  ): Promise<Task> {
+  ): Promise<Score> {
     this.logger.verbose(
-      `User "${user.username}" creating a new task. Data: ${JSON.stringify(
-        createTaskDto,
+      `User "${user.username}" creating a new score. Data: ${JSON.stringify(
+        createScoreDto,
       )}`,
     );
-    return this.tasksService.createTask(createTaskDto, user);
+    return this.scoresService.createScore(createScoreDto, user);
   }
 
   @Delete('/:id')
-  deleteTask(
+  deleteScore(
     @Param('id', ParseIntPipe) id: number,
     @GetUser() user: User,
   ): Promise<void> {
-    return this.tasksService.deleteTask(id, user);
+    return this.scoresService.deleteScore(id, user);
   }
 
   @Patch('/:id/status')
-  updateTaskStatus(
+  updateScoreStatus(
     @Param('id', ParseIntPipe) id: number,
-    @Body('status', TaskStatusValidationPipe) status: TaskStatus,
+    @Body('status', ScoreStatusValidationPipe) status: ScoreStatus,
     @GetUser() user: User,
-  ): Promise<Task> {
-    return this.tasksService.updateTaskStatus(id, status, user);
+  ): Promise<Score> {
+    return this.scoresService.updateScoreStatus(id, status, user);
   }
 }
