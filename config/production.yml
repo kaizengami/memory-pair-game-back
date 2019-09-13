@@ -1,5 +1,15 @@
-server:
-  origin: ec2-54-75-235-28.eu-west-1.compute.amazonaws.com
+# server:
+#   origin: ec2-54-75-235-28.eu-west-1.compute.amazonaws.com
 
+# db:
+#   synchronize: false
 db:
-  synchronize: false
+  host: 'ec2-54-75-235-28.eu-west-1.compute.amazonaws.com'
+  # username: 'postgres'
+  # password: '1234'
+  username: 'ptxbiqsetdxxuz'
+  password: 'b237c8f3b7a11501395fb10010b54b1e9ad59d3127be19541fe5862b0c1e38cb'
+  synchronize: true
+
+jwt:
+  secret: 'topSecret51'
