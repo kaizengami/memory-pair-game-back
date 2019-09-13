@@ -1,0 +1,24 @@
+setup:
+  addons:
+    - plan: heroku-postgresql
+      as: DATABASE
+build:
+  docker:
+    web: Dockerfile
+    worker: ./Dockerfile
+  config:
+    RAILS_ENV: development
+    FOO: bar
+    POSTGRES_PASSWORD: 1234
+    POSTGRES_USER: postgres
+# release:
+#   # command:
+#   #   - ./deployment-tasks.sh
+#   image: worker
+# run:
+#   web: bundle exec puma -C config/puma.rb
+#   worker: python myworker.py
+#   asset-syncer:
+#     command:
+#       - python asset-syncer.py
+#     image: worker
