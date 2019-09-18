@@ -3,7 +3,7 @@ import { IsOptional, IsIn, IsNotEmpty } from 'class-validator';
 
 export class GetScoresFilterDto {
   @IsOptional()
-  @IsIn([ScoreStatus.OPEN, ScoreStatus.IN_PROGRESS, ScoreStatus.DONE])
+  @IsIn([ScoreStatus.EASY, ScoreStatus.NORMAL, ScoreStatus.HARD])
   status: ScoreStatus;
 
   @IsOptional()

@@ -51,7 +51,7 @@ export class ScoreRepository extends Repository<Score> {
     score.name = name;
     score.time = time;
     score.points = points;
-    score.status = ScoreStatus.OPEN;
+    score.status = ScoreStatus.NORMAL;
     score.user = user;
 
     try {

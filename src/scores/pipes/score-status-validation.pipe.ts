@@ -3,9 +3,9 @@ import { ScoreStatus } from '../score-status.enum';
 
 export class ScoreStatusValidationPipe implements PipeTransform {
   readonly allowedStatuses = [
-    ScoreStatus.OPEN,
-    ScoreStatus.IN_PROGRESS,
-    ScoreStatus.DONE,
+    ScoreStatus.EASY,
+    ScoreStatus.NORMAL,
+    ScoreStatus.HARD,
   ];
 
   transform(value: any) {

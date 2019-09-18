@@ -23,7 +23,7 @@ import { ScoreStatus } from './score-status.enum';
 import { User } from '../auth/user.entity';
 import { GetUser } from '../auth/get-user.decorator';
 
-@Controller('tasks')
+@Controller('scores')
 @UseGuards(AuthGuard())
 export class ScoresController {
   private logger = new Logger('ScoresController');
